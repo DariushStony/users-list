@@ -1,43 +1,30 @@
-import usersData from './data/users.json'
-import UserList from './components/UserList'
-import AverageAge from './components/AverageAge'
+import usersData from "./data/users.json";
+import UserList from "./components/UserList";
+import AverageAge from "./components/AverageAge";
 
 const App = () => {
+  const users = usersData.filter((user) => {
+    return user.role === "user";
+  });
 
-  const calcAdminAverage = (users) => {
-    let average = [];
-    for (const user of users) {
-      if (user.role === "admin") {
-        average.push(user.age);
-      }
-    }
+  const adminAges = usersData
+    .filter((user) => {
+      return user.role === "admin";
+    })
+    .map((admin) => admin.age);
 
-    return average.reduce((sum, nextValue) => sum += nextValue) / average.length;
-  };
-
-  const extractUsers = (users) => {
-    let newUsers = [...users];
-
-    for (let i = newUsers.length - 1; i >= 0; i--) {
-      if (newUsers.at(i).role === 'admin') {
-        newUsers.splice(i, 1);
-      }
-    }
-
-    console.log(newUsers);
-
-    return newUsers;
-  }
-
-  const newUsers = extractUsers(usersData);
-  const adminAverage = calcAdminAverage(usersData);
+  const average = parseInt(
+    adminAges.reduce((accumulator, a) => {
+      return accumulator + a;
+    }, 0) / adminAges.length
+  );
 
   return (
     <>
-      <UserList users={newUsers} />
-      <AverageAge average={adminAverage} />
+      <UserList users={users} />
+      <AverageAge average={average} />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
